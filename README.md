@@ -24,12 +24,12 @@ If you find a bug, please open a GitHub Issue using the bug report template.
 Running the switch builds:
 
 - System settings (dark mode, key repeat, dock, Finder, trackpad)
-- Homebrew apps (casks and CLI tools)
-- Nix user packages (ripgrep, fd, fzf, jq, lazygit, Neovim, Hack Nerd Font)
+- Homebrew apps (cmux, Claude Code, WezTerm, herdr)
+- Nix user packages (ripgrep, fd, fzf, jq, lazygit, Neovim, Hack Nerd Font, Node.js 26 LTS with npm/npx, pnpm, gh, Python 3 with pip, uv, sqlite3)
 - Shell (zsh, aliases, starship prompt)
 - Editor (Neovim config with the rose-pine moon theme)
-- Terminal (WezTerm config with the rose-pine moon theme and dimmed unfocused windows)
-- Agent configs (Claude, Codex, opencode all share one AGENTS.md)
+- Terminal (cmux for daily agent work; WezTerm stays installed, with the rose-pine moon theme and dimmed unfocused windows)
+- Agent configs (Claude, Codex, opencode all share one AGENTS.md; Claude and Codex get user-scope Linear and Playwright MCP servers)
 - Optional Pi theme and local extensions, generic UI settings and model overrides, plus two deliberately pinned third-party Pi packages
 
 ## Prerequisites
@@ -88,12 +88,31 @@ Edit the config files in place, then apply:
 That's it.
 No separate build-and-copy step.
 
+## Getting started (Rahul's setup)
+
+First machine: `./bootstrap.sh`. After that, every change is:
+
+```sh
+./rebuild.sh
+```
+
+Then:
+
+1. Open cmux.
+2. Run `claude`. Sign in if this Mac has not yet.
+3. Run `/mcp` and authenticate Linear (`linear-server`) in the browser. Rebuilds keep the server registered; the sign-in is once.
+4. In that same `/mcp` list, confirm `playwright` is present. Ask Claude to open `https://example.com`. The first run may download a browser.
+
+Codex reads the same servers from `~/.codex/config.toml` (`linear` and `playwright`). To finish Linear for Codex, run `codex mcp login linear` once.
+
+`~/.claude.json` and `~/.codex/config.toml` stay real files. The rebuild only adds a server when that name is missing, so an existing Claude login, history, or Codex setting is left in place.
+
 ## Make it yours
 
 This repo is mine.
 If you clone it, review these before you run `bootstrap.sh`:
 
-- **Username**: run `./bootstrap.sh` (it detects your macOS username and offers to set it) OR change the single `user = "kunchen"` line in `flake.nix`.
+- **Username**: run `./bootstrap.sh` (it detects your macOS username and offers to set it) OR change the single `user = "rahul"` line in `flake.nix`.
   Everything else (`configuration.nix`, `home.nix`, home directory paths) is threaded from that one variable.
 - **Host label** `"mac"`, in three places: `flake.nix` (the `darwinConfigurations."mac"` name), `rebuild.sh:5` (the `#mac` at the end of the flake reference), and `bootstrap.sh`'s first-switch command (also `#mac`).
   All three have to match.

@@ -40,6 +40,9 @@
     casks = [
       "wezterm"
       "claude-code"
+      # Official Homebrew cask (homebrew-cask). No extra tap.
+      # https://formulae.brew.sh/cask/cmux
+      "cmux"
     ];
   };
 }
