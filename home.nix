@@ -1,4 +1,4 @@
-{ config, pkgs, user, ... }:
+{ config, lib, pkgs, user, ... }:
 
 let
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
@@ -18,6 +18,13 @@ in
     neovim
     # the font everything renders in
     nerd-fonts.hack
+    # dev tools. nodejs_26 is the current LTS line and ships npm/npx.
+    nodejs_26
+    pnpm
+    gh
+    (python3.withPackages (ps: [ ps.pip ]))
+    uv
+    sqlite    # sqlite3
   ];
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
@@ -79,4 +86,12 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".config/opencode/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+
+  # ~/.claude.json is Claude's live state (login, history, per-project MCP).
+  # A symlink would be overwritten or would freeze that state. This only inserts
+  # user-scope servers that are not already there. Codex config.toml is the same
+  # idea: append missing MCP tables, leave every other setting alone.
+  home.activation.ensureUserMcp = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run env JQ=${lib.getExe pkgs.jq} ${lib.getExe pkgs.bash} ${./scripts/ensure-user-mcp.sh}
+  '';
 }

@@ -10,9 +10,17 @@
   This makes sure you find the real problem so your fix will actually solve it.
 - When end-to-end testing a product, be picky about the UI you see and be obsessed with pixel perfection.
   If something clearly looks off, even if it is not directly related to what you are doing, try to get it fixed along the way.
-- Apply that same high standard to engineering excellence: lint, test failures, and test flakiness.
-  If you see one, even if it is not caused by what you are working on right now, still get it fixed.
+- If you notice a lint failure, test failure, or flaky test outside the task, mention it. Fix it only when it is in scope.
 - Before using "dynamic workflows", "ultra code" or any harness feature that immediately spawns a large swarm of subagents, always explain the tradeoffs and ask the user for explicit approval.
+
+## Linear
+
+Linear is the source of truth for what I am working on. Use the Linear MCP.
+
+- Before non-trivial work, look up the relevant Linear issue. Create one if it does not exist.
+- Put the issue ID in the branch name and in the commit and PR titles.
+- Post progress and decisions as comments on that issue.
+- Update the issue status when the work is done.
 
 ## Maintaining this file
 
